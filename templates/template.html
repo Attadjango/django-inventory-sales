@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>{{ title|default:"Inventory" }}</title>
+    <style>
+        {% block styles %}
+        {% endblock %}
+    </style>
+</head>
+<body>
+    <div class="page-shell">
+        <header class="topbar glass-panel">
+            <div class="brand-wrap">
+                <span class="brand-mark">I</span>
+                <div>
+                    <p class="eyebrow">Inventory System</p>
+                    <h1>{{ title|default:"Inventory" }}</h1>
+                </div>
+            </div>
+
+            <nav class="main-nav" aria-label="Main navigation">
+                <ul>
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    {% if user.is_authenticated %}
+                    <li>
+                            <li><a href="{% url 'inventory:inventory' %}" class="nav-link">Inventory</a></li>
+                            {% if not demo_restricted %}
+                            <li><a href="{% url 'inventory:Add_inventory' %}" class="nav-link">Add Inventory</a></li>
+                            {% endif %}
+                            <li><a href="{% url 'inventory:server_log' %}" class="nav-link">Server Log</a></li>
+                            {% if user.is_staff %}
+                                <li><a href="{% url 'users:register' %}" class="nav-link">Register</a></li>
+                            {% endif %}
+                            <form action="{% url 'users:logout' %}" method="post" class="nav-form">
+                                {% csrf_token %}
+                                <button type="submit" class="nav-link nav-button">Log out</button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li><a href="{% url 'users:login' %}" class="nav-link">Log in</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </header>
+
+        {% if demo_restricted %}
+        <div class="demo-banner" role="status">
+            <strong>Demo mode.</strong> You can browse stock and record sales. Adding, editing and deleting items is turned off. The sample data may change at any time.
+        </div>
+        {% endif %}
+
+        <main class="content-panel glass-panel">
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        <footer class="footer glass-panel">
+            <p>&copy; 2026 Inventory &amp; Sales System</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,123 @@
+{% extends "template.html" %}
+
+{% block styles %}
+<style>
+    .inventory-form-wrapper {
+        width: min(100%, 620px);
+        margin: 0 auto;
+    }
+
+    .inventory-form-header {
+        margin-bottom: 22px;
+    }
+
+    .inventory-form-header h2 {
+        margin-bottom: 8px;
+        font-size: clamp(1.8rem, 3vw, 2.5rem);
+    }
+
+    .inventory-form-header p {
+        margin: 0;
+        color: #5d6b7a;
+        line-height: 1.6;
+    }
+
+    .inventory-form {
+        padding: 24px;
+        background: rgba(255, 255, 255, 0.32);
+        border: 1px solid rgba(160, 170, 180, 0.35);
+        border-radius: 18px;
+        box-shadow: 0 18px 45px rgba(76, 90, 108, 0.08);
+    }
+
+    .inventory-form p {
+        margin-bottom: 18px;
+    }
+
+    .inventory-form label {
+        display: block;
+        margin-bottom: 7px;
+        color: #24313f;
+        font-weight: 600;
+    }
+
+    .inventory-form input,
+    .inventory-form textarea,
+    .inventory-form select {
+        width: 100%;
+        padding: 12px 13px;
+        border: 1px solid rgba(160, 170, 180, 0.55);
+        border-radius: 10px;
+        color: #24313f;
+        background: rgba(255, 255, 255, 0.72);
+        font: inherit;
+    }
+
+    .inventory-form input:focus,
+    .inventory-form textarea:focus,
+    .inventory-form select:focus {
+        outline: 3px solid rgba(86, 107, 135, 0.18);
+        border-color: #566b87;
+    }
+
+    .inventory-form textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .inventory-form .helptext {
+        display: block;
+        margin-top: 7px;
+        color: #5d6b7a;
+        font-size: 0.84rem;
+        line-height: 1.5;
+    }
+
+    .inventory-form .errorlist {
+        margin: 6px 0 8px;
+        padding: 0;
+        color: #a04444;
+        list-style: none;
+        font-size: 0.9rem;
+    }
+
+    .inventory-submit {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        background: #566b87;
+        color: #ffffff;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .inventory-submit:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 25px rgba(89, 103, 121, 0.2);
+    }
+
+    @media (max-width: 640px) {
+        .inventory-form {
+            padding: 18px 16px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <div class="inventory-form-wrapper">
+        <div class="inventory-form-header">
+            <h2>Update Stock</h2>
+            <p>Fill in the details below to update the stock quantity for an existing product.</p>
+        </div>
+
+        <form method="post" class="inventory-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="inventory-submit">Update Stock</button>
+        </form>
+    </div>
+{% endblock %}

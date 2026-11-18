@@ -1,0 +1,28 @@
+{% extends 'template.html' %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="section-heading">
+        <p class="eyebrow">Overview</p>
+        <h2>Home</h2>
+    </div>
+    <p class="lead">Welcome to your inventory dashboard. Keep stock levels, product details, and performance in one clean view.</p>
+
+    <div class="stats-grid">
+        <article class="stat-card glass-panel">
+            <span>Active Products</span>
+            <strong>{{ inventory_items|length }}</strong>
+        </article>
+        <article class="stat-card glass-panel">
+            <span>Total Units</span>
+            <strong>
+                {{ total_units }}
+            </strong>
+        </article>
+        <article class="stat-card glass-panel">
+            <span>Low Stock</span>
+            <strong>{{ low_stock_items|length }}</strong>
+        </article>
+    </div>
+</section>
+{% endblock %}

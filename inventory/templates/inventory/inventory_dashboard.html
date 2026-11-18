@@ -1,0 +1,108 @@
+{% extends 'template.html' %}
+
+{% block styles %}
+.inactive-item {
+    background-color: #fecaca;
+    border: 1px solid #ef4444;
+}
+{% endblock %}
+
+{% block content %}
+<section class="inventory-section">
+    <div class="section-heading">
+        <p class="eyebrow">Catalog</p>
+        <h2>Inventory Dashboard</h2>
+    </div>
+    {% if error %}
+    <p class="form-error" role="alert">{{ error }}</p>
+    {% endif %}
+    <div class="inventory-toolbar">
+        <form class="form-with-validation auth-form" action="{% url 'inventory:inventory' %}" method="get">
+            <input type="text" name="search" placeholder="Search inventory..." value="{{ request.GET.search }}">
+            <button class="form-submit" type="submit">Search</button>
+        </form>
+    </div>
+    <div class="inventory-list">
+        {% if inventory %}
+            {% for item in inventory %}
+                {% if item.is_active %}
+                    <article class="inventory-item glass-panel">
+                        <div class="item-header">
+                            <div>
+                                <h3><a href="{% url 'inventory:inventory_item' sku=item.sku %}">{{ item.title }}</a></h3>
+                                <p>{{ item.brand_name }} · Size {{ item.size }}</p>
+                            </div>
+                            <div class="item-actions">
+                                <span class="stock-pill">{{ item.stock_quantity }} in stock</span>
+                                {% if not demo_restricted %}
+<form method="post" action="{% url 'inventory:delete' sku=item.sku %}" class="delete-form" onsubmit="return confirm('Are you sure you want to delete this item?')">
+                                    {% csrf_token %}
+                                    <button type="submit" class="delete-link">Delete</button>
+                                </form>
+{% endif %}
+                                <form class="quantity-form" action="{% url 'inventory:inventory' %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="sku" value="{{ item.sku }}">
+                                    <label class="sr-only" for="quantity-{{ item.sku }}">Quantity to remove</label>
+                                    <button type="button" class="quantity-button" data-action="decrease" aria-label="Decrease quantity">-</button>
+                                    <input id="quantity-{{ item.sku }}" class="quantity-input" type="number" name="quantity" value="1" min="1" max="{{ item.stock_quantity }}" aria-label="Quantity to remove">
+                                    <button type="button" class="quantity-button" data-action="increase" aria-label="Increase quantity">+</button>
+                                    <button type="submit" class="remove-stock-button">Remove</button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <div class="item-meta">
+                            <span><strong>Color:</strong> {{ item.color_name }}</span>
+                            <span><strong>SKU:</strong> {{ item.sku }}</span>
+                            <span><strong>Price:</strong> ${{ item.selling_price }}</span>
+                            {% if not demo_restricted %}<a class="details-link" href="{% url 'inventory:update_stock' item.sku %}?sku={{ item.sku }}">Update Stock</a>{% endif %}
+                            <a class="details-link" href="{% url 'inventory:inventory_item' sku=item.sku %}">View details and sales</a>
+                        </div>
+                    </article>
+                    {% else %}
+                    <article class="inventory-item glass-panel inactive-item">
+                        <div class="item-header">
+                            <div>
+                                <h3><a href="{% url 'inventory:inventory_item' sku=item.sku %}">{{ item.title }}</a></h3>
+                                <p>{{ item.brand_name }} · Size {{ item.size }}</p>
+                            </div>
+                            <div class="item-actions">
+                                <span class="stock-pill">{{ item.stock_quantity }} in stock</span>
+                                {% if not demo_restricted %}
+<form method="post" action="{% url 'inventory:delete' sku=item.sku %}" class="delete-form" onsubmit="return confirm('Are you sure you want to delete this item?')">
+                                    {% csrf_token %}
+                                    <button type="submit" class="delete-link">Delete</button>
+                                </form>
+{% endif %}
+                            </div>
+                        </div>
+                        <div class="item-meta">
+                            <span><strong>Color:</strong> {{ item.color_name }}</span>
+                            <span><strong>SKU:</strong> {{ item.sku }}</span>
+                            <span><strong>Price:</strong> ${{ item.selling_price }}</span>
+                            {% if not demo_restricted %}<a class="details-link" href="{% url 'inventory:update_stock' item.sku %}?sku={{ item.sku }}">Update Stock</a>{% endif %}
+                            <a class="details-link" href="{% url 'inventory:inventory_item' sku=item.sku %}">View details and sales</a>
+                        </div>
+                    </article>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <div class="empty-state glass-panel">
+                <p>No inventory items available yet.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+<script>
+    document.querySelectorAll('.quantity-form').forEach((form) => {
+        const input = form.querySelector('.quantity-input');
+        form.querySelector('[data-action="decrease"]').addEventListener('click', () => {
+            input.value = Math.max(Number(input.min), Number(input.value) - 1);
+        });
+        form.querySelector('[data-action="increase"]').addEventListener('click', () => {
+            input.value = Math.min(Number(input.max), Number(input.value) + 1);
+        });
+    });
+</script>
+{% endblock %}

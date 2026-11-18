@@ -1,0 +1,86 @@
+{% extends "template.html" %}
+
+{% block content %}
+<style>
+    .server-log {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 30px;
+        font-family: Arial, sans-serif;
+        color: #263238;
+    }
+
+    .server-log h1 {
+        margin-bottom: 8px;
+        color: #1565c0;
+    }
+
+    .server-log h2 {
+        margin-top: 30px;
+        color: #37474f;
+        border-bottom: 2px solid #e3f2fd;
+        padding-bottom: 8px;
+    }
+
+    .log-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .log-list li {
+        background: #ffffff;
+        border-left: 4px solid #2196f3;
+        margin: 10px 0;
+        padding: 14px 18px;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .log-list li:hover {
+        background: #f5faff;
+        transform: translateX(3px);
+        transition: 0.2s ease;
+    }
+
+    .empty-message {
+        color: #78909c;
+        font-style: italic;
+    }
+</style>
+
+<div class="server-log">
+    <h1>Server Log</h1>
+    <p>This is the server log page.</p>
+
+    <h2>Inventory Items</h2>
+    <ul class="log-list">
+        {% for item in inventory_items %}
+            <li>
+                <strong>{{ item.title }}</strong>
+                <br>
+                Added by {{ item.user.username|default:"Unknown" }} on
+                {{ item.created_at|date:"M j, Y · g:i A" }}.
+                <br>
+                Last updated: {{ item.updated_at }}
+            </li>
+        {% empty %}
+            <li class="empty-message">No inventory items found.</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Sales Transactions</h2>
+    <ul class="log-list">
+        {% for sale in sales_transactions %}
+            <li>
+                <strong>{{ sale.item.title }}</strong>
+                <br>
+                Sold: {{ sale.quantity_sold }} on
+                {{ sale.sale_date|date:"M j, Y · g:i A" }}
+                by {{ sale.user.username|default:"Unknown" }}
+            </li>
+        {% empty %}
+            <li class="empty-message">No sales transactions found.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock content %}

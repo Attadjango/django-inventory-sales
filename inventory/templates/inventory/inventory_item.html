@@ -1,0 +1,65 @@
+{% extends 'template.html' %}
+
+{% block content %}
+<section class="inventory-section">
+    <div class="section-heading">
+        <p class="eyebrow">Inventory item</p>
+        <h2>{{ item.title }}</h2>
+    </div>
+
+    <div class="inventory-list">
+        {% if item %}
+            <article class="inventory-item glass-panel">
+                <div class="item-header">
+                    <div>
+                        <p>{{ item.brand_name }} · Size {{ item.size }}</p>
+                    </div>
+                    <span class="stock-pill">{{ item.stock_quantity }} in stock</span>
+                </div>
+
+                <div class="item-meta">
+                    <span><strong>Color:</strong> {{ item.color_name }}</span>
+                    <span><strong>SKU:</strong> {{ item.sku }}</span>
+                    <span><strong>Price:</strong> ${{ item.selling_price }}</span>
+                    {% if item.material %}<span><strong>Material:</strong> {{ item.material }}</span>{% endif %}
+                </div>
+
+                {% if item.description %}
+                    <p class="item-description">{{ item.description }}</p>
+                {% endif %}
+            </article>
+
+            <section class="sales-history glass-panel">
+                <div class="section-heading">
+                    <p class="eyebrow">Sales history</p>
+                    <h3>Recent transactions</h3>
+                </div>
+
+                {% if sale_transactions %}
+                    <div class="transaction-list">
+                        {% for sale in sale_transactions %}
+                            <article class="transaction-row">
+                                <div>
+                                    <strong>{{ sale.quantity_sold }} sold</strong>
+                                    <span>{{ sale.sale_date|date:"M j, Y · g:i A" }}</span>
+                                </div>
+                                <div class="transaction-value">
+                                    <span>${{ sale.sale_price_per_item }} each</span>
+                                    <strong>${{ sale.total_sale_value }}</strong>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="empty-history">No sales recorded for this item yet.</p>
+                {% endif %}
+            </section>
+        {% else %}
+            <div class="empty-state glass-panel">
+                <p>This inventory item could not be found.</p>
+                <a class="details-link" href="{% url 'inventory:inventory' %}">Back to inventory</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

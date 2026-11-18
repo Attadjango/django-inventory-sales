@@ -1,0 +1,17 @@
+{% extends 'template.html' %}
+
+
+{% block content %}
+    <section class="auth-section">
+        <div class="section-heading">
+            <p class="eyebrow">Get started</p>
+            <h2>{{ title }}</h2>
+        </div>
+        <p class="auth-intro">Create an account to access your inventory workspace.</p>
+        <form class="form-with-validation auth-form" action="{% url 'users:register' %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="form-submit" type="submit">Create account</button>
+        </form>
+    </section>
+{% endblock %}
